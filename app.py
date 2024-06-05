@@ -1,6 +1,22 @@
 import streamlit as st
 import pickle
+
+import streamlit as st
 import sklearn
+import numpy as np
+import pandas as pd
+
+# Get the versions of the libraries
+sklearn_version = sklearn.__version__
+numpy_version = np.__version__
+pandas_version = pd.__version__
+
+# Display the versions using Streamlit
+st.write(f"scikit-learn version: {sklearn_version}")
+st.write(f"NumPy version: {numpy_version}")
+st.write(f"Pandas version: {pandas_version}")
+
+st.set_page_config(page_title='IMBb-Movie Success')
 
 # Load the trained model
 with open('model.pkl', 'rb') as file:
@@ -32,14 +48,14 @@ with col2:
 submitted=st.button('Predict')
 
 if submitted:
-    pickled_model = pickle.load(open('model.pkl','rb'))
-    prediction= pickled_model.predict([[num_critic_for_reviews, duration, director_facebook_likes,
+
+    prediction= model.predict([[num_critic_for_reviews, duration, director_facebook_likes,
     actor_3_facebook_likes, actor_1_facebook_likes, gross,
     num_voted_users, cast_total_facebook_likes, facenumber_in_poster,
     num_user_for_reviews, budget, title_year, actor_2_facebook_likes]])
 
     if prediction[0] == 'Poor' or prediction[0] == 'Average':
-        st.write("The movie is predicted not to be a success!")
+        st.success("The movie is predicted not to be a success!")
     else:
-        st.write("The movie is predicted to be a success!")
+        st.success("The movie is predicted to be a success!")
 
