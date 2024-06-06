@@ -1,9 +1,9 @@
 import streamlit as st
-import pickle
+import joblib
 
 # Load the trained model
-with open('model.pkl', 'rb') as file:
-    model = pickle.load(file)
+with open('random_forest_model.pkl', 'rb') as file:
+    model = joblib.load(file)
 
 st.title("Movie Success Prediction")
 
@@ -47,15 +47,24 @@ with col7:
 with col8:
     budget = st.number_input("Budget", min_value=0,max_value=12215500000, value=10000000000)
 
+#Center the Predict button using CSS
+st.markdown("""
+    <style>
+    .stButton>button {
+        display: block;
+        margin: 0 auto;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 submitted=st.button('Predict')
 
 if submitted:
-    pickled_model = pickle.load(open('model.pkl','rb'))
-    prediction= pickled_model.predict([[num_critic_for_reviews, duration, director_facebook_likes,
-    actor_3_facebook_likes, actor_1_facebook_likes, gross,
-    num_voted_users, movie_facebook_likes, facenumber_in_poster,
-    num_user_for_reviews, budget, title_year, actor_2_facebook_likes]])
+    pickled_model = joblib.load(open('random_forest_model.pkl','rb'))
+    prediction= pickled_model.predict([[num_critic_for_reviews, num_user_for_reviews, num_voted_users,
+    director_facebook_likes, actor_1_facebook_likes, actor_3_facebook_likes,
+    actor_2_facebook_likes, movie_facebook_likes, duration,
+    facenumber_in_poster,title_year, gross,budget]])
 
     if prediction[0] == 'Poor' or prediction[0] == 'Average':
         st.success("The movie is predicted not to be a success!")
